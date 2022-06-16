@@ -1,7 +1,7 @@
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
-
+  mode: "spa",
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'github-auth-demo',
@@ -42,71 +42,12 @@ export default {
     proxy: true
   },
   auth: {
-    auth: {
-      localStorage: false,
-      cookie: {
-        prefix: 'tsterp-auth.',
-        options: {
-          path: '/',
-        },
+    strategies: {
+      github: {
+        clientId: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET
       },
-      redirect: {
-        login: '/login',
-        logout: '/login',
-        callback: '/login',
-        home: '/',
-      },
-      resetOnError: true,
-      strategies: {
-        github: {
-          clientId: process.env.GITHUB_CLIENT_ID,
-          clientSecret: process.env.GITHUB_CLIENT_SECRET
-        },
-        local: {
-          token: {
-            property: 'token',
-            required: true,
-            type: 'Bearer',
-          },
-          user: {
-            property: '',
-          },
-          endpoints: {
-            login: { url: '/v1/auth/login', method: 'post' },
-            logout: false,
-            user: { url: '/v1/employees/me', method: 'get' },
-          },
-        },
-        jira: {
-          scheme: 'oauth2',
-          endpoints: {
-            authorization: 'https://auth.atlassian.com/authorize',
-            token: process.env.API_URL + '/v1/auth/jira-login',
-            userInfo: '/v1/employees/me',
-            logout: false,
-          },
-          audience: 'api.atlassian.com',
-          token: {
-            property: 'token',
-            type: 'Bearer',
-            required: true,
-          },
-          responseType: 'code',
-          grantType: 'authorization_code',
-          redirectUri: process.env.JIRA_REDIRECT_URI,
-          clientId: process.env.JIRA_CLIENT_ID,
-          scope: [
-            'read:me',
-            'read:jira-work',
-            'write:jira-work',
-            'offline_access',
-          ],
-          codeChallengeMethod: '',
-          responseMode: '',
-          acrValues: '',
-        },
-      },
-    },
+    }
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
